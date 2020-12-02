@@ -9,6 +9,11 @@ if(isset($_GET['logout'])){
 	header('Location: '.INCLUDE_PATH);
 }
 
+if(isset($_GET['user'])){
+	session_destroy();
+	header('Location: '.INCLUDE_PATH_PAGES.'menu_usuario.php');
+}
+
 if(isset($_POST['enviar-post'])){
 	$texto = $_POST['texto-post'];
 	$data = date("Y-m-d");
@@ -39,7 +44,10 @@ if(isset($_POST['enviar-post'])){
 				</form>
 			</div>
 			<div class="logout">
-				<a href="<?php INCLUDE_PATH ?>?logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+				<a href="<?php INCLUDE_PATH ?>?logout"><img class="btn-logout" src="../images/logout-btn.png"></a>
+			</div>
+			<div class="user-menu">
+				<a href="<?php INCLUDE_PATH ?>?user"><i class="fas fa-user"></i></a>
 			</div>
 			<div class="img-menu-header">
 				<?php $foto = new MySql();?>
@@ -51,7 +59,7 @@ if(isset($_POST['enviar-post'])){
 	<section>
 		<div class="publicacao">
 			<form method="POST">
-				<label><h2>Escreva o que quiser</h2></label>
+				<h2>Escreva o que quiser</h2>
 				<input type="textarea" name="texto-post" placeholder="Digite aqui o que deseja postar..." required>
 				<input type="submit" name="enviar-post" value="Postar">
 			</form>
