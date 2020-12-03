@@ -8,8 +8,7 @@ define('INCLUDE_PATH_STYLE', 'http://localhost/redeSocial/style/');
 define('INCLUDE_PATH_CLASS', 'http://localhost/redeSocial/classes/');
 define('INCLUDE_PATH_IMAGES', 'http://localhost/redeSocial/images/');
 define('INCLUDE_PATH_UPLOADS', 'http://localhost/redeSocial/uploads/');
-
-
+define('BASE_DIR_PAGES',__DIR__);
 
 
 /*Definindo variáveis de conexão ao banco*/

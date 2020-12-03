@@ -2,6 +2,7 @@
 include('../config.php');
 include('../classes/MySql.php');
 session_start();
+date_default_timezone_set('America/Sao_Paulo');
 
 
 if(isset($_GET['logout'])){
@@ -10,18 +11,26 @@ if(isset($_GET['logout'])){
 }
 
 if(isset($_GET['user'])){
-	session_destroy();
 	header('Location: '.INCLUDE_PATH_PAGES.'menu_usuario.php');
+}
+
+if(isset($_GET['home'])){
+	header('Location: '.INCLUDE_PATH_PAGES);
 }
 
 if(isset($_POST['enviar-post'])){
 	$texto = $_POST['texto-post'];
 	$data = date("Y-m-d");
-	$imagem = "";
+	$imagem = $_FILES['foto'];
 	$usuario = $_SESSION['usuario'];
 	$postar = new MySql();
-	$postar->salvarPost($texto,$data, $usuario, $imagem);
-	header('Location: '.INCLUDE_PATH_PAGES);
+	if($postar->validarImagem($imagem) == true){
+		$postar->salvarPost($texto,$data, $hora, $usuario, $imagem['name']);
+		header('Location: '.INCLUDE_PATH_PAGES);
+	}else{
+		echo "Erro ao salvar post, tente novamente";
+	}
+	
 }
 ?>
 <!DOCTYPE html>
@@ -36,7 +45,7 @@ if(isset($_POST['enviar-post'])){
 	<section>
 		<header>
 			<div class="logo">
-				<img src="../images/image-index.jpg">
+				<a href="<?php INCLUDE_PATH ?>?home"><img src="../images/image-index.jpg"></a>
 			</div>
 			<div class="search-bar">
 				<form method="POST">
@@ -47,7 +56,7 @@ if(isset($_POST['enviar-post'])){
 				<a href="<?php INCLUDE_PATH ?>?logout"><img class="btn-logout" src="../images/logout-btn.png"></a>
 			</div>
 			<div class="user-menu">
-				<a href="<?php INCLUDE_PATH ?>?user"><i class="fas fa-user"></i></a>
+				<a href="<?php INCLUDE_PATH ?>?user"><i class="fas fa-user"><i id="sort-down" class="fas fa-sort-down"></i></i></a>
 			</div>
 			<div class="img-menu-header">
 				<?php $foto = new MySql();?>
@@ -58,9 +67,11 @@ if(isset($_POST['enviar-post'])){
 	</section>
 	<section>
 		<div class="publicacao">
-			<form method="POST">
+			<form method="POST" enctype="multipart/form-data">
 				<h2>Escreva o que quiser</h2>
 				<input type="textarea" name="texto-post" placeholder="Digite aqui o que deseja postar..." required>
+				<label for='selecao-arquivo'>Foto</label>
+				<input id='selecao-arquivo' type='file' name="foto">
 				<input type="submit" name="enviar-post" value="Postar">
 			</form>
 		</div>

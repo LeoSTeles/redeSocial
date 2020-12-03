@@ -111,6 +111,10 @@ header .btn-logout{
 	margin-top: 5px;
 	height: 25px;
 }
+
+header #sort-down{
+	font-size: 22px;
+}
 footer{
 	margin-top: 12px;
 	border-top: 1px solid #ccc;
@@ -119,7 +123,7 @@ footer{
 	background: white;
 }
 .search-bar{
-	margin-top: 3px;
+	margin-top: 1.5px;
 	margin-left: 200px;
 	float: left;
 }
@@ -180,7 +184,7 @@ header input[type=text]{
 }
 
 .publicacao h2{
-	color: #ccc;
+	color: #57b4e7;
 	position: relative;
 	top: 50%;
 	left: 70%;
@@ -200,18 +204,36 @@ header input[type=text]{
 }
 
 .publicacao input[type=submit]{
+	font-size: 16px;
 	background: #5294e2;
 	color: white;
 	position: relative;
-	left: 87%;
-	transform: translate(-50%,-50%);
+	left: 45%;
+	transform: translate(-50%,-89%);
 	text-align: center;
 	border-radius: 10px;
-	border: 1px solid #ccc;
-	width: 90px;
-	height: 30px;
+	border: none;
+	width: 75px;
+	height: 36px;
+	cursor: pointer;
 }
 
+.publicacao input[type=file]{
+	display: none;
+}
+
+.publicacao label{
+	text-align: center;
+	background-color: #5294e2;
+	border-radius: 10px;
+	color: white;
+	cursor: pointer;
+	position: relative;
+	padding: 7px 20px;
+	left: 28%;
+	top: -32px;
+	border: none;
+}
 
 
 div.box-postagem{
