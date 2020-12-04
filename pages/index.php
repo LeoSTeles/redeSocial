@@ -18,17 +18,25 @@ if(isset($_GET['home'])){
 	header('Location: '.INCLUDE_PATH_PAGES);
 }
 
+if(isset($_FILES['foto'])){
+	$imagem = $_FILES['foto'];
+}else{
+	$imagem = "";
+}
+
 if(isset($_POST['enviar-post'])){
 	$texto = $_POST['texto-post'];
 	$data = date("Y-m-d");
-	$imagem = $_FILES['foto'];
 	$usuario = $_SESSION['usuario'];
 	$postar = new MySql();
-	if($postar->validarImagem($imagem) == true){
+
+	if($postar->validarImagem($imagem) == true AND isset($_FILES['foto'])){
 		$postar->salvarPost($texto,$data, $hora, $usuario, $imagem['name']);
+		move_uploaded_file($imagem['tmp_name'], BASE_DIR_PAGES.'/uploads/'.$imagem['name']);
 		header('Location: '.INCLUDE_PATH_PAGES);
 	}else{
-		echo "Erro ao salvar post, tente novamente";
+		$postar->salvarPost($texto,$data, $hora, $usuario, $imagem);
+		header('Location: '.INCLUDE_PATH_PAGES);
 	}
 	
 }
@@ -78,6 +86,7 @@ if(isset($_POST['enviar-post'])){
 	</section>
 	<section>
 		<div class="postagens">
+
 			<div class="box-postagem">
 				<?php
 					$postagens = new MySql();

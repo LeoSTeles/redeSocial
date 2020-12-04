@@ -64,12 +64,6 @@ class MySql{
 
 	public static function validarImagem($imagem){
 		if($imagem['type'] == 'image/jpeg' || $imagem['type'] == 'image/jpg' || $imagem['type'] == 'image/png'){
-			$tamanho = intval($imagem['size']/1024);
-			if($tamanho < 300){
-				return true;
-			}else{
-				return false;
-			}
 			return true;
 		}else{
 			return false;
@@ -85,12 +79,6 @@ class MySql{
 		$objDate = DateTime::createFromFormat('Y-m-d H:i',$data);
 		$hora = $objDate->format('H:i');
 		$data_hora = date("Y-m-d H:i");
-
-		/*Movendo a imagem para a pasta de uploads */
-		move_uploaded_file($imagem['tmp_name'], BASE_DIR_PAGES.'/uploads/'.$imagem['name']);
-
-
-		/*Fim do código de mover imagem*/
 		$pdo = new PDO('mysql:host='.HOST.';dbname='.DATABASE,USER,PASSWORD,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 		$sql = "INSERT INTO posts(id, postagem, data, hora, user, imagem) VALUES (NULL, ?, ?, ?, ?, ?)";
 		$query = $pdo->prepare($sql);
@@ -121,9 +109,15 @@ class MySql{
 		$usuario = $_SESSION['usuario'];
 		$senha = $_SESSION['senha'];
 		$pdo = new PDO('mysql:host='.HOST.';dbname='.DATABASE,USER,PASSWORD,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-		$sql = "SELECT * FROM posts ORDER BY  hora desc";
+		$sql = "SELECT * FROM posts WHERE user = ? ORDER BY  hora desc";
 		$query = $pdo->prepare($sql);
 		$query->execute(array($usuario));
+
+		$sql_img = "SELECT * FROM users WHERE usuario = ? AND senha = ?";
+		$query_img = $pdo->prepare($sql_img);
+		$query_img->execute(array($usuario,$senha));
+		$img_user = $query_img->fetch(PDO::FETCH_ASSOC);
+		$user_img = $img_user['imagem'];
 		while($result = $query->fetch(PDO::FETCH_ASSOC)){
 			$nome = $result['user'];
 			$date = $result['data'];
@@ -140,12 +134,12 @@ class MySql{
 			$imagem = $result['imagem'];
 			$postagem = $result['postagem'];
 			
-			if($imagem ==""){
-				echo "<div class= info-post><div class=imagem-retorno><img src= '../uploads/$img' ></div><div class=nome-usuario>$usuario</div></div>";
+			if($imagem =="Array"){
+				echo "<div class= info-post><div class=imagem-retorno><img src= '../uploads/$user_img' ></div><div class=nome-usuario>$usuario</div></div>";
 				echo "<div class=texto-post>$postagem</div>";
 				echo "<div class =data-post> $data - $hora</div>";
 			}else{
-				echo "<div class= info-post><div class=imagem-retorno><img src= '../uploads/$imagem' ></div><div class=nome-usuario>$usuario</div></div>";
+				echo "<div class= info-post><div class=imagem-retorno><img src= '../uploads/$user_img' ></div><div class=nome-usuario>$usuario</div></div>";
 				echo "<img class='imagem-post' src= '../uploads/$imagem' >";
 				echo "<div class=texto-post>$postagem</div>";
 				echo "<div class =data-post> $data - $hora</div>";
